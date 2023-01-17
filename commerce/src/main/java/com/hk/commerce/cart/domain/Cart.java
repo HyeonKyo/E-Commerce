@@ -3,6 +3,7 @@ package com.hk.commerce.cart.domain;
 import com.hk.commerce.member.domain.Member;
 import com.hk.commerce.product.domain.Product;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class Cart {
     private Product product;
 
     private int quantity;
+
+    @Builder
+    public Cart(Member member, Product product, int quantity) {
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

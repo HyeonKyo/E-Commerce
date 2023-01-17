@@ -31,9 +31,8 @@ class MemberTest {
         String name = "이름";
         String address = "서울특별시 노원구 상계동";
         String phoneNumber = "010-1234-5678";
-        String role = "admin";
 
-        Member member = Member.createJoinMember(email, password, name, address, phoneNumber, role);
+        Member member = Member.createJoinMember(email, password, name, address, phoneNumber);
         assertThat(member).isNotNull();
     }
 

@@ -42,7 +42,7 @@ public class Member {
     }
 
     public static Member createJoinMember(String email, String password, String name,
-                                          String address, String phoneNumber, String role) {
+                                          String address, String phoneNumber) {
         return new Member(email, password, name, address, phoneNumber);
     }
 
