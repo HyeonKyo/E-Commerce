@@ -4,7 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,23 +27,23 @@ public class Member {
 
     private String phoneNumber;
 
-    private String role;
+    private Role role;
 
     private boolean emailVerified;
 
     private Member(String email, String password, String name,
-                  String address, String phoneNumber, String role) {
+                  String address, String phoneNumber) {
         setEmail(email);
         setPassword(password);
         setName(name);
         setAddress(address);
         setPhoneNumber(phoneNumber);
-        setRole(role);
+        role = Role.ROLE_NOT_VERIFIED;
     }
 
-    public static Member createMember(String email, String password, String name,
-                                      String address, String phoneNumber, String role) {
-        return new Member(email, password, name, address, phoneNumber, role);
+    public static Member createJoinMember(String email, String password, String name,
+                                          String address, String phoneNumber, String role) {
+        return new Member(email, password, name, address, phoneNumber);
     }
 
     private void setEmail(String email) {
@@ -63,7 +66,4 @@ public class Member {
         this.phoneNumber = phoneNumber;
     }
 
-    private void setRole(String role) {
-        this.role = role;
-    }
 }

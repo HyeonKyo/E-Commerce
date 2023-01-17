@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 /*
 * ### 기능
@@ -34,7 +33,7 @@ class MemberTest {
         String phoneNumber = "010-1234-5678";
         String role = "admin";
 
-        Member member = Member.createMember(email, password, name, address, phoneNumber, role);
+        Member member = Member.createJoinMember(email, password, name, address, phoneNumber, role);
         assertThat(member).isNotNull();
     }
 
