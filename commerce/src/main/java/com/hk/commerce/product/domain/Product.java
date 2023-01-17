@@ -14,10 +14,12 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "product_id")
     private Long id;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "product_category", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"))
     private Set<Long> categoryIds;
 
     private String name;
