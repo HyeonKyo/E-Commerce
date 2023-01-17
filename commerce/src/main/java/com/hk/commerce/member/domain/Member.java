@@ -18,7 +18,7 @@ public class Member {
 
     private String email;
 
-    private String password;
+    private Password password;
 
     private String address;
 
@@ -52,7 +52,7 @@ public class Member {
     }
 
     private void setPassword(String password) {
-        this.password = password;
+        this.password = new Password(password);
     }
 
     private void setAddress(String address) {
