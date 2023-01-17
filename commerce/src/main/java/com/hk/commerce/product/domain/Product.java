@@ -1,5 +1,7 @@
 package com.hk.commerce.product.domain;
 
+import com.hk.commerce.cart.domain.Cart;
+import com.hk.commerce.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,5 +63,26 @@ public class Product {
             throw new IllegalArgumentException();
         }
         this.price = price;
+    }
+
+    public Cart makeCart(Member member, int quantity) {
+        checkEnoughStock(quantity);
+        checkCanSelling();
+        return Cart.builder()
+                .product(this)
+                .member(member)
+                .quantity(quantity).build();
+    }
+
+    private void checkCanSelling() {
+        if (!state.canSelling()) {
+            throw new RuntimeException("품절이거나 판매 불가능한 상품입니다.");
+        }
+    }
+
+    private void checkEnoughStock(int quantity) {
+        if (quantity > stock) {
+            throw new RuntimeException("상품 재고가 부족합니다.");
+        }
     }
 }
