@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,9 +20,9 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "order_line", joinColumns = @JoinColumn(name = "order_number"))
+    private Set<OrderLine> orderLines;
 
     private int quantity;
 
