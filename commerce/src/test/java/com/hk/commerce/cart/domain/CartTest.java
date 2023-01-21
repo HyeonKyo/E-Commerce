@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/*
-- 사용자는 제품이 재고가 있고 구매 가능한 경우에만 장바구니에 제품을 추가할 수 있습니다.
-- 사용자의 쇼핑 카트에 있는 제품의 수량은 사용 가능한 재고보다 클 수 없습니다.
-- 사용자가 로그인한 경우에만 제품을 사용자 카트에 추가할 수 있습니다.
-* */
 class CartTest {
 
     @Test
