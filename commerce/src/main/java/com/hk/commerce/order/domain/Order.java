@@ -1,5 +1,6 @@
 package com.hk.commerce.order.domain;
 
+import com.hk.commerce.cart.domain.Cart;
 import com.hk.commerce.member.domain.Member;
 import com.hk.commerce.product.domain.Product;
 import lombok.AccessLevel;
@@ -16,13 +17,9 @@ import java.util.Set;
 public class Order {
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "order_line", joinColumns = @JoinColumn(name = "order_number"))
-    private Set<OrderLine> orderLines;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     private int quantity;
 
