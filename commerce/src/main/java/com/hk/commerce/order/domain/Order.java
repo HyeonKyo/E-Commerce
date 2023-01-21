@@ -1,15 +1,11 @@
 package com.hk.commerce.order.domain;
 
 import com.hk.commerce.cart.domain.Cart;
-import com.hk.commerce.member.domain.Member;
-import com.hk.commerce.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
