@@ -1,26 +1,91 @@
 package com.hk.commerce.order.domain;
 
+import com.hk.commerce.cart.domain.Cart;
+import com.hk.commerce.member.domain.Member;
 import com.hk.commerce.product.domain.Product;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/*
-* ### 기능
-- 주문 발행: 사용자가 장바구니에 있는 제품을 주문할 수 있습니다.
-- 순서 보기: 제품, 총 비용 및 상태와 같은 기존 주문의 세부 정보를 볼 수 있습니다.
-- 주문 취소: 사용자가 기존 주문을 발송하기 전에 취소할 수 있습니다.
-- 주문 내역 보기: 사용자가 이전 주문을 모두 볼 수 있습니다.
-### 규칙
-- 주문은 상태가 존재합니다.
-- 사용자가 프로필에서 청구 및 배송 주소를 완료한 경우에만 주문할 수 있습니다.
-- 상품 재고가 존재하는 경우에만 주문할 수 있습니다.
-- 주문이 성사되는 순간 상품 재고가 주문 개수만큼 감소합니다.
-* */
 class OrderTest {
 
     @Test
-    void 장바구니에서_주문발행() {
+    void 주문생성_회원기본주소() {
+        Member member = makeMember();
+        Product product = new Product("상품명", "상품 설명", 10_000,
+                10, "imageURL");
+        Cart cart = product.makeCart(member, 3);
 
+        Order order = cart.makeOrder();
+
+        assertThat(order).isNotNull();
+        assertThat(order.getShippingAddress()).isEqualTo("회원 기본 주소");
+    }
+
+    @Test
+    void 주문생성_다른주소() {
+        Member member = makeMember();
+        Product product = new Product("상품명", "상품 설명", 10_000,
+                10, "imageURL");
+        Cart cart = product.makeCart(member, 3);
+
+        Order order = cart.makeOrder("다른 주소");
+
+        assertThat(order).isNotNull();
+        assertThat(order.getShippingAddress()).isEqualTo("다른 주소");
+    }
+
+    @Test
+    void 주문취소_출고후_불가() {
+        Order orderAfterShipping = Order.builder()
+                .state(OrderState.SHIPPING)
+                .shippingAddress("주소")
+                .build();
+
+        assertThatThrownBy(() -> orderAfterShipping.cancel())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("주문 취소가 불가능한 상태입니다.");
+    }
+
+    @Test
+    void 주문취소_출고전_가능() {
+        Order orderBeforeShipping = Order.builder()
+                .state(OrderState.PREPARING)
+                .shippingAddress("주소")
+                .build();
+
+        orderBeforeShipping.cancel();
+        assertThat(orderBeforeShipping.getState()).isEqualTo(OrderState.CANCEL);
+    }
+
+    @Test
+    void 배송지변경_출고전_가능() {
+        Order orderBeforeShipping = Order.builder()
+                .state(OrderState.PREPARING)
+                .shippingAddress("주소")
+                .build();
+        String newAddress = "새 주소";
+
+        orderBeforeShipping.changeShippingAddress(newAddress);
+
+        assertThat(orderBeforeShipping.getShippingAddress()).isEqualTo(newAddress);
+    }
+
+    @Test
+    void 배송지변경_출고후_불가() {
+        Order orderAfterShipping = Order.builder()
+                .state(OrderState.SHIPPING)
+                .shippingAddress("주소")
+                .build();
+        String newAddress = "새 주소";
+
+        assertThatThrownBy(() -> orderAfterShipping.changeShippingAddress(newAddress))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    private static Member makeMember() {
+        return Member.createJoinMember("asd123@naver.com", "Abcd1234", "이름",
+                "회원 기본 주소", "010-1234-5678");
     }
 }

@@ -2,6 +2,7 @@ package com.hk.commerce.order.domain;
 
 import com.hk.commerce.cart.domain.Cart;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +18,29 @@ public class Order {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    private int quantity;
-
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
     private String shippingAddress;
 
-    private String billingAddress;
+    @Builder
+    public Order(Cart cart, OrderState state, String shippingAddress) {
+        this.cart = cart;
+        this.state = state;
+        this.shippingAddress = shippingAddress;
+    }
+
+    public void cancel() {
+        if (!state.canCancel()) {
+            throw new IllegalStateException("주문 취소가 불가능한 상태입니다.");
+        }
+        state = OrderState.CANCEL;
+    }
+
+    public void changeShippingAddress(String newAddress) {
+        if (!state.canChangeable()) {
+            throw new IllegalStateException("주문을 변경할 수 없습니다.");
+        }
+        shippingAddress = newAddress;
+    }
 }

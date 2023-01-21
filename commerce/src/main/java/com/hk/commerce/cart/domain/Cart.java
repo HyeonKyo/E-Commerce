@@ -1,6 +1,8 @@
 package com.hk.commerce.cart.domain;
 
 import com.hk.commerce.member.domain.Member;
+import com.hk.commerce.order.domain.Order;
+import com.hk.commerce.order.domain.OrderState;
 import com.hk.commerce.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,5 +34,17 @@ public class Cart {
         this.member = member;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public Order makeOrder() {
+        return makeOrder(member.getAddress());
+    }
+
+    public Order makeOrder(String shippingAddress) {
+        return Order.builder()
+                .cart(this)
+                .state(OrderState.PAYMENT_WAITING)
+                .shippingAddress(shippingAddress)
+                .build();
     }
 }
